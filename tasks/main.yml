@@ -1,0 +1,136 @@
+# tasks file for gnu-parallel
+---
+- name: install dependencies
+  apt:
+    name: "{{ item }}"
+    state: "{{ apt_install_state | default('latest') }}"
+    update_cache: true
+    cache_valid_time: "{{ apt_update_cache_valid_time | default(3600) }}"
+  with_items: "{{ gnu_parallel_dependencies }}"
+  tags:
+    - configuration
+    - gnu-parallel
+    - gnu-parallel-install
+    - gnu-parallel-install-dependencies
+
+- name: remove (distro version)
+  apt:
+    name: parallel
+    state: absent
+    purge: true
+  when: gnu_parallel_remove_distro_version
+  tags:
+    - configuration
+    - gnu-parallel
+    - gnu-parallel-remove
+    - gnu-parallel-remove-distro
+
+- name: create (download) directory
+  file:
+    path: "{{ gnu_parallel_download_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  tags:
+    - configuration
+    - gnu-parallel
+    - gnu-parallel-install
+    - gnu-parallel-install-download
+
+- name: download (latest)
+  get_url:
+    url: "{{ gnu_parallel_download_url }}"
+    dest: "{{ gnu_parallel_download_path }}/{{ gnu_parallel_download_url | basename }}"
+    owner: root
+    group: root
+    mode: 0644
+    force: true
+  tags:
+    - configuration
+    - gnu-parallel
+    - gnu-parallel-install
+    - gnu-parallel-install-download
+
+- name: create (build) directory
+  file:
+    path: "{{ gnu_parallel_build_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  tags:
+    - configuration
+    - gnu-parallel
+    - gnu-parallel-install
+    - gnu-parallel-install-build
+
+- name: version check
+  shell: tar -jtf {{ gnu_parallel_download_path }}/{{ gnu_parallel_download_url | basename }} | head -n 1
+  changed_when: false
+  register: _version_check
+  tags:
+    - configuration
+    - gnu-parallel
+    - gnu-parallel-install
+    - gnu-parallel-install-build
+
+- name: extract
+  unarchive:
+    src: "{{ gnu_parallel_download_path }}/{{ gnu_parallel_download_url | basename }}"
+    dest: "{{ gnu_parallel_build_path }}"
+    creates: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
+    copy: false
+  register: _unarchive
+  tags:
+    - configuration
+    - gnu-parallel
+    - gnu-parallel-install
+    - gnu-parallel-install-build
+
+- name: configure
+  command: ./configure
+  args:
+    chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
+  when: _unarchive | changed
+  tags:
+    - configuration
+    - gnu-parallel
+    - gnu-parallel-install
+    - gnu-parallel-install-build
+    - gnu-parallel-install-build-configure
+
+- name: make
+  command: make -j{{ ansible_processor_cores + 1 }}
+  args:
+    chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
+  when: _unarchive | changed
+  tags:
+    - configuration
+    - gnu-parallel
+    - gnu-parallel-install
+    - gnu-parallel-install-build
+    - gnu-parallel-install-build-make
+
+- name: make install
+  command: make install
+  args:
+    chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
+  when: _unarchive | changed
+  tags:
+    - configuration
+    - gnu-parallel
+    - gnu-parallel-install
+    - gnu-parallel-install-build
+    - gnu-parallel-install-build-make-install
+
+- name: silence citation notice
+  copy:
+    src: root/.parallel
+    dest: "{{ ansible_env.HOME }}/"
+    owner: "{{ ansible_env.USER }}"
+    group: "{{ ansible_env.USER }}"
+  tags:
+    - configuration
+    - gnu-parallel
+    - gnu-parallel-silence-citation-notice

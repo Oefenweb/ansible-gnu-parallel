@@ -1,0 +1,5 @@
+# post test file for gnu-parallel
+---
+- name: post | test installation
+  command: parallel --version
+  changed_when: false
