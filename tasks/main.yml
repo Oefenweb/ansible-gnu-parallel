@@ -127,12 +127,9 @@
 - name: silence citation notice
   copy:
     src: root/.parallel
-    dest: "~{{ item }}/"
-    owner: "{{ item }}"
-    group: "{{ item }}"
-  with_items:
-    - "{{ ansible_env.USER }}"
-    - "{{ ansible_user | default(ansible_ssh_user) }}"
+    dest: "{{ ansible_env.HOME }}/"
+    owner: "{{ ansible_env.USER }}"
+    group: "{{ ansible_env.USER }}"
   tags:
     - configuration
     - gnu-parallel
