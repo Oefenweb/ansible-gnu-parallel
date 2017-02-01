@@ -1,0 +1,9 @@
+# test file for gnu-parallel
+---
+- hosts: all
+  remote_user: vagrant
+  become: true
+  roles:
+    - ../../
+  post_tasks:
+    - include: post.yml

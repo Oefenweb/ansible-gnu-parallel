@@ -1,0 +1,9 @@
+# vars file for gnu-parallel
+---
+gnu_parallel_dependencies:
+  - build-essential
+
+gnu_parallel_build_path: /var/lib/ansible/gnu-parallel/build
+
+gnu_parallel_download_path: /var/lib/ansible/gnu-parallel/downloads
+gnu_parallel_download_url: http://ftpmirror.gnu.org/parallel/parallel-latest.tar.bz2
