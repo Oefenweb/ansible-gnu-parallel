@@ -95,7 +95,7 @@
     ./configure
   args:
     chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
-  when: _unarchive | changed
+  when: _unarchive is changed
   tags:
     - configuration
     - gnu-parallel
@@ -108,7 +108,7 @@
     make -j{{ ansible_processor_cores + 1 }}
   args:
     chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
-  when: _unarchive | changed
+  when: _unarchive is changed
   tags:
     - configuration
     - gnu-parallel
@@ -121,7 +121,7 @@
     make install
   args:
     chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
-  when: _unarchive | changed
+  when: _unarchive is changed
   tags:
     - configuration
     - gnu-parallel
