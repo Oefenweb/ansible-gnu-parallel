@@ -1,6 +1,7 @@
 ## gnu-parallel
 
-[![Build Status](https://travis-ci.org/Oefenweb/ansible-gnu-parallel.svg?branch=master)](https://travis-ci.org/Oefenweb/ansible-gnu-parallel) [![Ansible Galaxy](http://img.shields.io/badge/ansible--galaxy-gnu--parallel-blue.svg)](https://galaxy.ansible.com/Oefenweb/gnu-parallel)
+[![Build Status](https://travis-ci.org/Oefenweb/ansible-gnu-parallel.svg?branch=master)](https://travis-ci.org/Oefenweb/ansible-gnu-parallel)
+[![Ansible Galaxy](http://img.shields.io/badge/ansible--galaxy-gnu--parallel-blue.svg)](https://galaxy.ansible.com/Oefenweb/gnu-parallel)
 
 Set up the latest version of [GNU Parallel](https://www.gnu.org/software/parallel/) in Debian-like systems.
 
