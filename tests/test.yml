@@ -5,5 +5,3 @@
   become: true
   roles:
     - ../../
-  post_tasks:
-    - include: post.yml

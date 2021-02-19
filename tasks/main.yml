@@ -90,44 +90,38 @@
     - gnu-parallel-install
     - gnu-parallel-install-build
 
-- name: configure
-  command: >
-    ./configure
-  args:
-    chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
-  when: _unarchive is changed
-  tags:
-    - configuration
-    - gnu-parallel
-    - gnu-parallel-install
-    - gnu-parallel-install-build
-    - gnu-parallel-install-build-configure
+- block:
 
-- name: make
-  command: >
-    make -j{{ ansible_processor_cores + 1 }}
-  args:
-    chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
-  when: _unarchive is changed
-  tags:
-    - configuration
-    - gnu-parallel
-    - gnu-parallel-install
-    - gnu-parallel-install-build
-    - gnu-parallel-install-build-make
+    - name: configure
+      command: >
+        ./configure
+      args:
+        chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
+      tags:
+        - gnu-parallel-install-build-configure
 
-- name: make install
-  command: >
-    make install
-  args:
-    chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
+    - name: make
+      command: >
+        make -j{{ ansible_processor_cores + 1 }}
+      args:
+        chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
+      tags:
+        - gnu-parallel-install-build-make
+
+    - name: make install
+      command: >
+        make install
+      args:
+        chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
+      tags:
+        - gnu-parallel-install-build-make-install
+
   when: _unarchive is changed
   tags:
     - configuration
     - gnu-parallel
     - gnu-parallel-install
     - gnu-parallel-install-build
-    - gnu-parallel-install-build-make-install
 
 - name: silence citation notice
   copy:
@@ -140,3 +134,13 @@
     - configuration
     - gnu-parallel
     - gnu-parallel-silence-citation-notice
+
+- name: verify
+  command: >
+    parallel --version
+  changed_when: false
+  tags:
+    - configuration
+    - gnu-parallel
+    - gnu-parallel-install
+    - gnu-parallel-install-verify
