@@ -1,4 +1,4 @@
-# tasks file for gnu-parallel
+# tasks file
 ---
 - name: install dependencies
   apt:

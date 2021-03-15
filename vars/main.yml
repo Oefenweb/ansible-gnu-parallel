@@ -1,4 +1,4 @@
-# vars file for gnu-parallel
+# vars file
 ---
 gnu_parallel_dependencies:
   - build-essential
