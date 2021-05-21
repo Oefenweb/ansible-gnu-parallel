@@ -2,7 +2,7 @@
 ---
 galaxy_info:
   namespace: oefenweb
-  role_name: gnu-parallel
+  role_name: gnu_parallel
   author: Mischa ter Smitten
   company: Oefenweb.nl B.V.
   description: Set up the latest version of GNU Parallel in Debian-like systems
