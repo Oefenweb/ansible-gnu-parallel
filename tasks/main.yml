@@ -65,7 +65,7 @@
     - gnu-parallel-install-build
 
 - name: version check
-  ansible.builtin.shell: >
+  ansible.builtin.shell: >  #  noqa risky-shell-pipe
     tar -jtf {{ gnu_parallel_download_path }}/{{ gnu_parallel_download_url | basename }} | head -n 1
   args:
     warn: false
@@ -90,7 +90,14 @@
     - gnu-parallel-install
     - gnu-parallel-install-build
 
-- block:
+- name: install
+  when: _unarchive is changed
+  tags:
+    - configuration
+    - gnu-parallel
+    - gnu-parallel-install
+    - gnu-parallel-install-build
+  block:
 
     - name: configure
       ansible.builtin.command: >
@@ -115,13 +122,6 @@
         chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
       tags:
         - gnu-parallel-install-build-make-install
-
-  when: _unarchive is changed
-  tags:
-    - configuration
-    - gnu-parallel
-    - gnu-parallel-install
-    - gnu-parallel-install-build
 
 - name: silence citation notice
   ansible.builtin.copy:
