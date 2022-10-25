@@ -64,8 +64,8 @@
     - gnu-parallel-install
     - gnu-parallel-install-build
 
-- name: version check
-  ansible.builtin.shell: >  #  noqa risky-shell-pipe
+- name: version check  # noqa risky-shell-pipe
+  ansible.builtin.shell: >
     tar -jtf {{ gnu_parallel_download_path }}/{{ gnu_parallel_download_url | basename }} | head -n 1
   args:
     warn: false
@@ -90,7 +90,7 @@
     - gnu-parallel-install
     - gnu-parallel-install-build
 
-- name: install
+- name: install  # noqa no-handler
   when: _unarchive is changed
   tags:
     - configuration
@@ -104,6 +104,7 @@
         ./configure
       args:
         chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
+      changed_when: true
       tags:
         - gnu-parallel-install-build-configure
 
@@ -112,6 +113,7 @@
         make -j{{ ansible_processor_cores + 1 }}
       args:
         chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
+      changed_when: true
       tags:
         - gnu-parallel-install-build-make
 
@@ -120,6 +122,7 @@
         make install
       args:
         chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
+      changed_when: true
       tags:
         - gnu-parallel-install-build-make-install
 
