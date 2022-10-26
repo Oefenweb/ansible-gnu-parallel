@@ -1,7 +1,7 @@
 # tasks file
 ---
 - name: install dependencies
-  apt:
+  ansible.builtin.apt:
     name: "{{ gnu_parallel_dependencies }}"
     state: "{{ apt_install_state | default('latest') }}"
     update_cache: true
@@ -13,7 +13,7 @@
     - gnu-parallel-install-dependencies
 
 - name: remove (distro version)
-  apt:
+  ansible.builtin.apt:
     name: parallel
     state: absent
     purge: true
@@ -25,7 +25,7 @@
     - gnu-parallel-remove-distro
 
 - name: create (download) directory
-  file:
+  ansible.builtin.file:
     path: "{{ gnu_parallel_download_path }}"
     state: directory
     owner: root
@@ -38,7 +38,7 @@
     - gnu-parallel-install-download
 
 - name: download (latest)
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ gnu_parallel_download_url }}"
     dest: "{{ gnu_parallel_download_path }}/{{ gnu_parallel_download_url | basename }}"
     owner: root
@@ -52,7 +52,7 @@
     - gnu-parallel-install-download
 
 - name: create (build) directory
-  file:
+  ansible.builtin.file:
     path: "{{ gnu_parallel_build_path }}"
     state: directory
     owner: root
@@ -64,8 +64,8 @@
     - gnu-parallel-install
     - gnu-parallel-install-build
 
-- name: version check
-  shell: >
+- name: version check  # noqa risky-shell-pipe
+  ansible.builtin.shell: >
     tar -jtf {{ gnu_parallel_download_path }}/{{ gnu_parallel_download_url | basename }} | head -n 1
   args:
     warn: false
@@ -78,7 +78,7 @@
     - gnu-parallel-install-build
 
 - name: extract
-  unarchive:
+  ansible.builtin.unarchive:
     src: "{{ gnu_parallel_download_path }}/{{ gnu_parallel_download_url | basename }}"
     dest: "{{ gnu_parallel_build_path }}"
     creates: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
@@ -90,41 +90,44 @@
     - gnu-parallel-install
     - gnu-parallel-install-build
 
-- block:
-
-    - name: configure
-      command: >
-        ./configure
-      args:
-        chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
-      tags:
-        - gnu-parallel-install-build-configure
-
-    - name: make
-      command: >
-        make -j{{ ansible_processor_cores + 1 }}
-      args:
-        chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
-      tags:
-        - gnu-parallel-install-build-make
-
-    - name: make install
-      command: >
-        make install
-      args:
-        chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
-      tags:
-        - gnu-parallel-install-build-make-install
-
+- name: install  # noqa no-handler
   when: _unarchive is changed
   tags:
     - configuration
     - gnu-parallel
     - gnu-parallel-install
     - gnu-parallel-install-build
+  block:
+
+    - name: configure
+      ansible.builtin.command: >
+        ./configure
+      args:
+        chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
+      changed_when: true
+      tags:
+        - gnu-parallel-install-build-configure
+
+    - name: make
+      ansible.builtin.command: >
+        make -j{{ ansible_processor_cores + 1 }}
+      args:
+        chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
+      changed_when: true
+      tags:
+        - gnu-parallel-install-build-make
+
+    - name: make install
+      ansible.builtin.command: >
+        make install
+      args:
+        chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
+      changed_when: true
+      tags:
+        - gnu-parallel-install-build-make-install
 
 - name: silence citation notice
-  copy:
+  ansible.builtin.copy:
     src: root/.parallel
     dest: "{{ ansible_env.HOME }}/"
     owner: "{{ ansible_env.USER }}"
@@ -136,7 +139,7 @@
     - gnu-parallel-silence-citation-notice
 
 - name: verify
-  command: >
+  ansible.builtin.command: >
     parallel --version
   changed_when: false
   tags:
