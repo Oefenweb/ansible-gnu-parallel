@@ -67,8 +67,6 @@
 - name: version check  # noqa risky-shell-pipe
   ansible.builtin.shell: >
     tar -jtf {{ gnu_parallel_download_path }}/{{ gnu_parallel_download_url | basename }} | head -n 1
-  args:
-    warn: false
   changed_when: false
   register: _version_check
   tags:
