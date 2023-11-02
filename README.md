@@ -23,7 +23,7 @@ None
 ---
 - hosts: all
   roles:
-    - gnu-parallel
+    - oefenweb.gnu-parallel
 ```
 
 #### License
