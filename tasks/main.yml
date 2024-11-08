@@ -64,7 +64,7 @@
     - gnu-parallel-install
     - gnu-parallel-install-build
 
-- name: version check  # noqa risky-shell-pipe
+- name: version check  # noqa risky-shell-pipe command-instead-of-module
   ansible.builtin.shell: >
     tar -jtf {{ gnu_parallel_download_path }}/{{ gnu_parallel_download_url | basename }} | head -n 1
   changed_when: false
