@@ -30,7 +30,7 @@
     state: directory
     owner: root
     group: root
-    mode: 0755
+    mode: '0755'
   tags:
     - configuration
     - gnu-parallel
@@ -43,7 +43,7 @@
     dest: "{{ gnu_parallel_download_path }}/{{ gnu_parallel_download_url | basename }}"
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
     force: true
   tags:
     - configuration
@@ -57,7 +57,7 @@
     state: directory
     owner: root
     group: root
-    mode: 0755
+    mode: '0755'
   tags:
     - configuration
     - gnu-parallel
@@ -130,7 +130,7 @@
     dest: "{{ ansible_env.HOME }}/"
     owner: "{{ ansible_env.USER }}"
     group: "{{ ansible_env.USER }}"
-    mode: 0644
+    mode: '0644'
   tags:
     - configuration
     - gnu-parallel
