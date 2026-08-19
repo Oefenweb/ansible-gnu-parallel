@@ -127,7 +127,7 @@
 - name: silence citation notice
   ansible.builtin.copy:
     src: root/.parallel
-    dest: "{{ ansible_facts['env']['USER'] }}/"
+    dest: "{{ ansible_facts['env']['HOME'] }}/"
     owner: "{{ ansible_facts['env']['USER'] }}"
     group: "{{ ansible_facts['env']['USER'] }}"
     mode: '0644'
