@@ -1,3 +1,4 @@
 # defaults file
 ---
 gnu_parallel_remove_distro_version: true
+gnu_parallel_download_url: http://ftpmirror.gnu.org/parallel/parallel-20260722.tar.bz2
