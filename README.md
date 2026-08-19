@@ -11,7 +11,7 @@ None
 
 #### Variables
 
-* `gnu_parallel_remove_distro_version`: [default: `true`]: Whether or not to remove the distribution version
+* `gnu_parallel_remove_distro_version`: [default: `true`]: Whether to remove the distribution version
 
 ## Dependencies
 

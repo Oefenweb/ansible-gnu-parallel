@@ -108,7 +108,7 @@
 
     - name: make
       ansible.builtin.command: >
-        make -j{{ ansible_processor_cores + 1 }}
+        make -j{{ ansible_facts['processor_cores'] + 1 }}
       args:
         chdir: "{{ gnu_parallel_build_path }}/{{ _version_check.stdout }}"
       changed_when: true
@@ -127,9 +127,9 @@
 - name: silence citation notice
   ansible.builtin.copy:
     src: root/.parallel
-    dest: "{{ ansible_env.HOME }}/"
-    owner: "{{ ansible_env.USER }}"
-    group: "{{ ansible_env.USER }}"
+    dest: "{{ ansible_facts['env']['USER'] }}/"
+    owner: "{{ ansible_facts['env']['USER'] }}"
+    group: "{{ ansible_facts['env']['USER'] }}"
     mode: '0644'
   tags:
     - configuration
